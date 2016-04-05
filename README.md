@@ -24,7 +24,6 @@ This is an *ObjC* library for *gzipping*/*ungzipping* that directly manipulates 
         deflateFromPath:destinationGzipFilePath completion:^(NSError *error) {
             [self completeActionWithError:error];
         }];
-}];
 ```
 
 
