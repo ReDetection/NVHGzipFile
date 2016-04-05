@@ -1,1 +1,1 @@
-pod "NVHTarGzip", :path => "../NVHTarGzip.podspec"
+pod "NVHGzipFile", :path => "../NVHGzipFile.podspec"
