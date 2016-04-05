@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NVHFile.h"
 
-@interface NVHGzipFile : NVHFile
+@interface NVHGzipFile : NSObject
+
+@property (nonatomic, readonly) NSString *filePath;
+
+- (instancetype)initWithPath:(NSString *)filePath;
 
 - (BOOL)inflateToPath:(NSString *)destinationPath error:(NSError **)error;
 - (void)inflateToPath:(NSString *)destinationPath completion:(void(^)(NSError *))completion;

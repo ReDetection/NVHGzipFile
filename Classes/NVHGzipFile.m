@@ -8,7 +8,6 @@
 
 #import <zlib.h>
 #import "NVHGzipFile.h"
-#import "NSFileManager+NVHFileSize.h"
 
 NSString *const NVHGzipFileZlibErrorDomain = @"io.nvh.targzip.zlib.error";
 
@@ -26,20 +25,27 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
 
 @interface NVHGzipFile ()
 
-@property (nonatomic,assign) CGFloat fileSizeFraction;
+@property (nonatomic, strong) NSString *filePath;
 
 @end
 
 
 @implementation NVHGzipFile
 
+- (instancetype)initWithPath:(NSString *)filePath {
+    self = [super init];
+    if (self) {
+        self.filePath = filePath;
+    }
+    return self;
+}
+
+
 - (BOOL)inflateToPath:(NSString *)destinationPath error:(NSError **)error {
-    [self setupProgress];
     return [self innerInflateToPath:destinationPath error:error];
 }
 
 - (void)inflateToPath:(NSString *)destinationPath completion:(void(^)(NSError *))completion {
-    [self setupProgress];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSError *error = nil;
         [self innerInflateToPath:destinationPath error:&error];
@@ -50,8 +56,6 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
 }
 
 - (BOOL)innerInflateToPath:(NSString *)destinationPath error:(NSError **)error {
-    [self updateProgressVirtualTotalUnitCountWithFileSize];
-    
     NVHGzipFileErrorType result = NVHGzipFileErrorTypeNone;
     
     if (self.filePath && destinationPath)
@@ -113,7 +117,6 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
 	{
 		NSInteger readBytes = gzread(sourceGzFile, buffer, bufferLength);
         NSInteger dataOffSet = gzoffset(sourceGzFile);
-        [self updateProgressVirtualCompletedUnitCount:dataOffSet];
 		if (readBytes > 0)
 		{
             CFIndex writtenBytes = CFWriteStreamWrite(writeStream, buffer, readBytes);
@@ -141,7 +144,6 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
             }
         }
 	}
-    [self updateProgressVirtualCompletedUnitCountWithTotal];
 	gzclose(sourceGzFile);
 	free(buffer);
     CFWriteStreamClose(writeStream);
@@ -149,12 +151,10 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
 }
 
 - (BOOL)deflateFromPath:(NSString *)sourcePath error:(NSError **)error {
-    [self setupProgress];
     return [self innerDeflateFromPath:sourcePath error:error];
 }
 
 - (void)deflateFromPath:(NSString *)sourcePath completion:(void(^)(NSError *))completion {
-    [self setupProgress];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSError *error = nil;
         [self innerDeflateFromPath:sourcePath error:&error];
@@ -165,8 +165,6 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
 }
 
 - (BOOL)innerDeflateFromPath:(NSString *)sourcePath error:(NSError **)error {
-    [self updateProgressVirtualTotalUnitCount:[[NSFileManager defaultManager] fileSizeOfItemAtPath:sourcePath]];
-    
     NVHGzipFileErrorType result = NVHGzipFileErrorTypeNone;
     
     if (self.filePath && sourcePath)
@@ -232,7 +230,6 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
     {
         NSInteger readBytes = CFReadStreamRead(readStream, buffer, bufferLength);
         totalReadBytes += readBytes;
-        [self updateProgressVirtualCompletedUnitCount:(long long)totalReadBytes];
         if (readBytes > 0)
         {
             int writtenBytes = gzwrite(destinationGzFile, buffer, (unsigned int)readBytes);
@@ -260,7 +257,6 @@ typedef NS_ENUM(NSInteger, NVHGzipFileErrorType)
             }
         }
     }
-    [self updateProgressVirtualCompletedUnitCountWithTotal];
     CFReadStreamClose(readStream);
     int gzError = gzclose(destinationGzFile);
     if (gzError != Z_OK)
