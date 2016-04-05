@@ -46,7 +46,6 @@ This is an *ObjC* library for *gzipping*/*ungzipping* that directly manipulates 
     BOOL success = [[[NVHGzipFile alloc]
         initWithPath:sourceFilePath]
         deflateFromPath:destinationGzipFilePath error:&error];
-}];
 ```
 
 ## Installation
