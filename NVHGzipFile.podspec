@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "NVHGzipFile"
-  s.version          = "1.1.0"
+  s.version          = "1.1.1"
   s.summary          = "Just a simple Gzip handling for iOS6+"
   s.description      = <<-DESC
                       Unpack and pack gzipped files with ease. Features:

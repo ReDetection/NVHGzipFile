@@ -1,1 +1,5 @@
+platform :ios, '8.0'
+
+target 'NVHTarGzipExample' do
 pod "NVHGzipFile", :path => "../NVHGzipFile.podspec"
+end
