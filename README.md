@@ -2,6 +2,8 @@
 
 This is an *ObjC* library for *gzipping*/*ungzipping* that directly manipulates files. It isn't implemented as a category on `NSData` (unlike [GZIP](https://github.com/nicklockwood/GZIP) or [Godzippa](https://github.com/mattt/Godzippa)) so the full file doesn't have to be first loaded into memory.
 
+Version 1.1.1 is the latest supporting iOS 7.
+
 ## Usage
 
 ### Asynchronous

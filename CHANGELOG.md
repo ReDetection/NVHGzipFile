@@ -1,5 +1,8 @@
 # NVHTarGzip CHANGELOG
 
+## 2.0.0
+
+Drop support for iOS 7 and lower
 
 ## 1.1.1
 

@@ -1,5 +1,5 @@
 PODS:
-  - NVHGzipFile (1.1.0)
+  - NVHGzipFile (2.0.0)
 
 DEPENDENCIES:
   - NVHGzipFile (from `../NVHGzipFile.podspec`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../NVHGzipFile.podspec
 
 SPEC CHECKSUMS:
-  NVHGzipFile: b8e9faa306324777d642fe2f7da9ed97fe89fd6d
+  NVHGzipFile: 5da23a57f833a99e719374eebc7feba2c9498f96
 
 PODFILE CHECKSUM: c665fa744f8116bc9b48a3c1a34191d51d83dbab
 
